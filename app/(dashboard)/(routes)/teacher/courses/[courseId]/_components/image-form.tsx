@@ -3,22 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
 import { z } from "zod";
 import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { Course } from "@prisma/client";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
@@ -37,15 +27,6 @@ export const ImageForm = ({ courseId, initialData }: ImageFormProps) => {
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const router = useRouter();
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      imageUrl: initialData?.imageUrl || ''
-    },
-  });
-
-  const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -66,6 +47,12 @@ export const ImageForm = ({ courseId, initialData }: ImageFormProps) => {
           {!isEditing && !initialData.imageUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
+              Add image
+            </>
+          )}
+          {!isEditing && initialData.imageUrl && (
+            <>
+              <PlusCircle className="h-4 w-4 mr-2" />
               Edit image
             </>
           )}
@@ -77,7 +64,7 @@ export const ImageForm = ({ courseId, initialData }: ImageFormProps) => {
             <ImageIcon className="h-10 w-10 text-slate-500" />
           </div>
         ) : (
-          <div>
+          <div className="relative aspect-video mt-2">
             <Image alt="upload" fill className="object-cover rounded-md"
               src={initialData.imageUrl} />
           </div>

@@ -31,7 +31,11 @@ const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
-
+  const category = await db.category.findMany({
+    orderBy:{
+      name:'asc',
+    }
+  })
   const completionText = `(${completedFields} / ${totalFields} )`;
   return (
     <div className="p-6">
