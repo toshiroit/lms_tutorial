@@ -80,3 +80,13 @@ body,
   }
 }
 
+[aria-disabled] {
+}
+:not([aria-disabled]) {
+}
+
+/* After */
+[aria-disabled="true"] {
+}
+[aria-disabled="false"] {
+}
