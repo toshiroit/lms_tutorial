@@ -1,13 +1,25 @@
-import { auth } from "@clerk/nextjs";
+import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
-const CourseIdPage = async ({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { courseId: string };
-}) => {
-  const { userId } = auth();
-  return <div>Watch the course</div>;
+const CourseIdPage = async ({ params }: { params: { courseId: string } }) => {
+  const course = await db.course.findUnique({
+    where: {
+      id: params.courseId,
+    },
+    include: {
+      chapters: {
+        where: {
+          isPublished: true,
+        },
+        orderBy: {
+          position: "desc",
+        },
+      },
+    },
+  });
+  if (!course) {
+    return redirect("/");
+  }
+  return redirect(`/courses/${course.id}/chapters/${course.chapters[0].id}`);
 };
 export default CourseIdPage;
